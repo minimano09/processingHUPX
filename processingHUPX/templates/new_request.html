@@ -1,0 +1,185 @@
+{% extends "layout.html" %}
+{% block headcontent %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+{% endblock %}
+
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.title.label(class="form-control-label") }}
+                {% if form.title.errors %}
+                    {{ form.title(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.title.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ form.title(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div id="datepicker" class="form-group date" data-date-format="yyyy-mm-dd">
+                {{ form.date.label }}
+                {{ form.date(class="form-control datepicker") }}
+            </div>
+            <div id="radiobutton-li" class="form-check" style="list-style-type:none">
+                {{ form.sheet_option.label(class="form-check-label") }} {{ form.sheet_option(class="form-check form-control-lg", type="radio") }}
+                <div id="freq-options" style="display: none" class="form-check">
+                    {{ form.frequency.label(class="form-check-label") }} {{ form.frequency(class="form-check form-control-lg", type="radio") }}
+                    <div id="monthly-options" style="display: none;">
+                      {{ form.detail_by_month.label(class="form-check-label") }} {{ form.detail_by_month(class="form-check form-control-lg", type="radio") }}
+                    </div>
+                    <div id="checkbox-options" style="display: none;" class="form-check">
+                        {{ form.box1(class="form-check-input form-control-lg", type="checkbox") }} {{ form.box1.label(class="form-check-label") }} <br>
+                        {{ form.box2(class="form-check-input form-control-lg", type="checkbox") }} {{ form.box2.label(class="form-check-label") }} <br>
+                        {{ form.box3(class="form-check-input form-control-lg", type="checkbox") }} {{ form.box3.label(class="form-check-label") }} <br>
+                        {{ form.box4(class="form-check-input form-control-lg", type="checkbox") }} {{ form.box4.label(class="form-check-label") }} <br>
+                        {{ form.box5(class="form-check-input form-control-lg", type="checkbox") }} {{ form.box5.label(class="form-check-label") }} <br>
+                        {{ form.box6(class="form-check-input form-control-lg", type="checkbox") }} {{ form.box6.label(class="form-check-label") }} <br>
+                        {{ form.box7(class="form-check-input form-control-lg", type="checkbox") }} {{ form.box7.label(class="form-check-label") }} <br>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block bodyscript %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <script>
+      $(document).ready(function() {
+        $('.datepicker').datepicker({
+          endDate: '0d',
+          startDate: '-5y',
+          autoclose: true,
+          format: 'yyyy-mm-dd',
+          weekStart: 1
+        });
+      });
+    </script>
+
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            const datepicker = document.querySelector('.datepicker');
+            const sheet = document.querySelectorAll('input[name="sheet_option"]');
+            const freq = document.querySelectorAll('input[name="frequency"]');
+            const monthly_opt = document.querySelectorAll('input[name="detail_by_month"]')
+            if (!datepicker.value) {
+                event.preventDefault();
+                alert('Kérlek válassz egy dátumot!');
+            }
+        });
+    </script>
+
+    <script>
+        const freqOptions = document.querySelector('#freq-options')
+        const monthlyOptions = document.querySelector('#monthly-options');
+        const checkboxOptions = document.querySelector('#checkbox-options');
+        const submitButton = document.querySelector('input[type="submit"]');
+        const frequencyRadios = document.querySelectorAll('input[name="frequency"]')
+        const monthlyRadios = document.querySelectorAll('input[name="detail_by_month"]')
+        monthlyOptions.style.display = 'none';
+        checkboxOptions.style.display = 'none';
+        freqOptions.style.display = 'none';
+
+        document.querySelectorAll('input[name="sheet_option"]').forEach((radio) => {
+            radio.addEventListener('change', () => {
+                freqOptions.style.display = 'block';
+                frequencyRadios.forEach(radio => radio.checked=false);
+                monthlyRadios.forEach(radio => radio.checked=false);
+            });
+        });
+
+        document.querySelectorAll('input[name="frequency"]').forEach((radio) => {
+          radio.addEventListener('change', () => {
+            monthlyRadios.forEach(radio => radio.checked=false);
+
+            document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+                checkbox.checked = false;
+            });
+            if (radio.value === 'monthly') {
+              monthlyOptions.style.display = 'block';
+              checkboxOptions.style.display = 'none';
+              document.querySelectorAll('input[name="detail_by_month"]').forEach((radio) => {
+                  radio.addEventListener('change', () => {
+                    document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+                        checkbox.checked = false;
+                    });
+                    checkboxOptions.style.display = 'block';
+                  });
+        });
+            } else {
+              monthlyOptions.style.display = 'none';
+              checkboxOptions.style.display = 'block';
+            }
+          });
+        });
+
+        submitButton.addEventListener('click', (event) => {
+          if (monthlyOptions.style.display === 'block') {
+            const inputs = document.querySelectorAll('#monthly-options input[type="radio"]');
+            let selected = false;
+            inputs.forEach(input => {
+              if (input.checked) {
+                selected = true;
+              }
+            });
+
+            if (!selected) {
+              event.preventDefault();
+              alert('Válassz ki egy opciót!');
+            }
+          }
+        });
+
+    </script>
+
+    <script>
+        (function() {
+        const form = document.querySelector('#checkbox-options');
+        const checkboxes = form.querySelectorAll('input[type=checkbox]');
+        const checkboxLength = checkboxes.length;
+        const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
+
+        function init() {
+            if (firstCheckbox) {
+                for (let i = 0; i < checkboxLength; i++) {
+                    checkboxes[i].addEventListener('change', checkValidity);
+                }
+
+                checkValidity();
+            }
+        }
+
+        function isChecked() {
+            for (let i = 0; i < checkboxLength; i++) {
+                if (checkboxes[i].checked) return true;
+            }
+
+            return false;
+        }
+
+        function checkValidity() {
+            const errorMessage = !isChecked() ? 'Legalább egy opciót válassz ki!' : '';
+            firstCheckbox.setCustomValidity(errorMessage);
+        }
+
+        init();
+    })();
+    </script>
+
+    <script>
+
+    </script>
+
+{% endblock %}
+

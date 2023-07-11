@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% if current_user.is_admin == 1 %}
+        <h1 class="mb-3">Összes lekérdezés ({{ posts.total }})</h1>
+    {% else %}
+        <h1 class="mb-3">Saját lekérdezések ({{ posts.total }})</h1>
+    {% endif %}
+    {% for req in posts.items %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('users.user_requests', username=req.owner.username) }}">{{ req.owner.username }}</a>
+              <small class="text-muted">{{ req.date_requested.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2><a class="article-title" href="{{ url_for('hupx_requests.req', req_id=req.id) }}">{{ req.title }}</a></h2>
+            <p class="article-content">
+                <img src="{{ url_for('static', filename='plots/'+req.img_name) }}" class="img-fluid">
+            </p>
+          </div>
+        </article>
+    {% endfor %}
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num  and current_user.is_admin == 1 %}
+            {% if posts.page==page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('users.show_requests', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('users.show_requests', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            {% if posts.page==page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('users.user_requests', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('users.user_requests', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endblock content %}

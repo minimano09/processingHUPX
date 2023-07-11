@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="mb-5">Üdvözlünk a <i>HUPX processing</i> weboldalán!</h1>
+    <section class="mb-3">
+        <h2>Bővebben a HUPX-ról:</h2>
+        <p>
+            A HUPX Zrt. 2010 júliusában jött létre a MAVIR Zrt. leányvállalataként. <br>
+            Szabályozottságával, elfogadott kereskedelmi kereteivel elősegíti a
+            magyarországi energiapiac likviditásának erősítését,
+            hatékonyságának növelését, régiós szinten pedig az ágazata
+            működőtőke áramlását is támogatja.
+            A HUPX alaptevékenységével – a referenciaár,
+            valamint a tőzsdei kereskedési felület biztosításával – hatékonyan
+            járul hozzá a magyar villamosenergia-piac fejlődéséhez.
+            A piac fejlődésének szempontjából fontos,
+            hogy a villamos energia szabadpiaci kereskedelmének
+            minél nagyobb hányada történjen az áramtőzsde biztosítékrendszerén
+            keresztül. Ehhez megfelelő jogszabályi háttér, átlátható feltételek,
+            minden résztvevő számára egységes hozzáférés,
+            az erőforrások hatékony használata,
+            értékarányos tranzakciós költségek,
+            valamint egy biztos elszámolási háttér mellett a referenciaárként
+            elfogadott elszámoló árak is szükségesek.
+            A HUPX Zrt. által működtetett szervezett villamosenergia-piac
+            hozzájárul a teljes hazai termelés hatékonyságához
+            és a villamosenergia fogyasztóiár mérséklődéséhez.
+            Erről bővebb tájékoztatás az alábbi <a href="https://hupx.hu/hu/" target="_blank">linken</a> található.
+        </p>
+    </section>
+    <section class="mb-3">
+        <h2>Az oldal célja:</h2>
+        <p>
+            Habár a fentebb említett honlapon rengeteg információ található,
+            mégis sokszor problémát okozhat a túl sok információ.
+            Könnyen előfordulhat, hogy a sok menüpont és a még több link között
+            az ember elveszti a fejét és nem tudja,
+            merre találja a számára fontos dolgot. <br>
+            A <i>HUPX processing</i> weboldalon ezt a problémát próbáljuk meg
+            orvosolni. Egy felhasználóbarát felületet biztosítunk arra,
+            hogy minden felhasználó személyre szabott módon tudja
+            összerakni az általa kívánt lekérdezést, annak függvényében,
+            hogy a számára lényeges dolgokat lássa.
+            Emellett, nem csak egy táblázatos megjelenítéssel fogja
+            szemben találni magát, hanem ezzel egyidejűleg,
+            a könnyebb olvashatóság érdekében az adatok vonaldiagram
+            segítségével is ábrázolásra kerülnek.
+        </p>
+    </section>
+    <section class="mb-3">
+        <h2>Személyre szabott lekérdezés készítése:</h2>
+        <p>
+            A lekérdezéseket a HUPX-ról származó adatok alapján
+            készítjük el. A vizsgált adatok formátuma az
+            alábbi <a href="https://hupx.hu/hu/piaci-adatok/id/piaci-adatok" target="_blank">linken</a>
+            tekinthető meg. Egyedi adatösszetétel létrehozására az
+            <a href="{{ url_for('hupx_requests.new_request') }}"><i>Új lekérdezés</i></a> fül alatt van lehetőség,
+            ahol az alábbi pontokat kell kitölteni:
+        </p>
+        <ul>
+            <li>Cím: tetszőleges cím adható az újonnan elkészülő lekérdezésnek</li>
+            <li>Dátum: Kötelező kiválasztani egy dátumot, amely nem lehet jövőbeli</li>
+            <li>Válaszd ki a napi bontást: A HUPX-on levő vizsgált Excelek mely lapja legyen feldolgozva</li>
+            <li>Ábrázolt időszak hossza: </li>
+                <ul>
+                    <li>Napi: csak a kiválasztott nap</li>
+                    <li>Heti: kiválasztott napot megelőző 1 hét </li>
+                    <li>Havi: kiválasztott napot megelőző 1 hónap</li>
+                </ul>
+            <li>Majd ki kell választani, hogy mely változókat akarjuk látni:</li>
+                <ul>
+                    <li>Legjobb vételi ár – HU (EUR/MWh): A legmagasabb áron beadott vételi ajánlat az adott kontraktusra a teljes kereskedési időszakra vonatkozóan</li>
+                    <li>Legjobb kínálati ár – HU (EUR/MWh): A legalacsonyabb áron beadott eladási ajánlat az adott kontraktusra a teljes kereskedési időszakra vonatkozóan.</li>
+                    <li>Súlyozott átlagár (EUR/MWh): A teljes kereskedési időszak alatt az adott kontraktusra történt összes ügyletkötés volumennel súlyozott átlagára.</li>
+                    <li>Vásárolt mennyiség (MWh): A teljes kereskedési időszak alatt a HUPX tagok által a tőzsdén megvásárolt villamosenergia mennyisége az adott kontraktusra vonatkozóan.</li>
+                    <li>Eladott mennyiség (MWh): A teljes kereskedési időszak alatt a HUPX tagok által a tőzsdén eladott villamosenergia mennyisége az adott kontraktusra vonatkozóan.</li>
+                    <li>Importált mennyiség (MWh): A HUPX tagok által az SIDC-n (XBID) keresztül importált villamosenergia mennyisége.</li>
+                    <li>Exportált mennyiség (MWh): A HUPX tagok által az SIDC-n (XBID) keresztül exportált villamosenergia mennyisége.</li>
+                </ul>
+        </ul>
+        <p>Az elkészült lekérdezéseket pedig a fül alatt lehet megtekinteni</p>
+    </section>
+{% endblock %}

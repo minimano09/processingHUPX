@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block content %}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="{{ url_for('users.user_requests', username=request.owner.username) }}">{{ request.owner.username }}</a>
+            <small class="text-muted">{{ request.date_requested.strftime('%Y-%m-%d') }}</small>
+            {% if request.owner == current_user or request.owner %}
+                <div>
+                    <a class="btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('hupx_requests.update_request', req_id=request.id) }}">Módosítás</a>
+                    <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Törlés</button>
+                </div>
+            {% endif %}
+            <div class="btn-group" role="group">
+                <div class="dropdown show">
+                  <button class="btn btn-secondary dropdown-toggle mr-2" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Ábra mentése
+                  </button>
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="{{ url_for('hupx_requests.save_plot_as_png', req_id=request.id) }}">Mentése PNG-ben</a>
+                    <a class="dropdown-item" href="{{ url_for('hupx_requests.save_plot_as_pdf', req_id=request.id) }}">Mentés PDF-ben</a>
+                  </div>
+                </div>
+                <div class="dropdown show">
+                  <button class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Adatok mentése
+                  </button>
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="{{ url_for('hupx_requests.save_df_as_excel', req_id=request.id) }}">Mentése Excelben</a>
+                    <a class="dropdown-item" href="{{ url_for('hupx_requests.save_df_as_csv', req_id=request.id) }}">Mentés CSV-ben</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <h2 class="article-title">{{ request.title }}</h2>
+        <p class="article-content">
+            <img src="{{ url_for('static', filename='plots/'+request.img_name) }}" class="img-fluid" >
+        </p>
+      </div>
+    </article>
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Biztosan törli a lekérdezést?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégse</button>
+          <form action="{{ url_for('hupx_requests.delete_request', req_id=request.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Törlés">
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
+{% endblock content %}

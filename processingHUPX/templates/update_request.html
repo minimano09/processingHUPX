@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block headscript %}
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.1.0.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.1.0.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.1.0.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.1.0.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-3.1.0.min.js"
+            crossorigin="anonymous"></script>
+
+    {{ script|safe }}
+{% endblock %}
+
+{% block content %}
+    {{ div|safe }}
+{% endblock %}
+

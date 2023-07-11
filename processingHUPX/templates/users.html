@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Összes felhasználó ({{ users.total }})</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Felhasználónév</th>
+            <th scope="col">Email</th>
+            <th scope="col">Admin jogosultság</th>
+            <th scope="col">Fiók kezelés</th>
+          </tr>
+        </thead>
+
+    {% for u in users %}
+        <tr>
+          <td>{{ u.username }}</td>
+          <td>{{ u.email }}</td>
+          <td>
+            {% if u.is_admin == 1 %}
+              Van
+            {% else %}
+              Nincs
+            {% endif %}
+          </td>
+          <td>
+            <form action="{{ url_for('users.change_admin_role', username=u.username) }}" method="POST">
+              {% if u.is_admin == 1 %}
+                <button type="submit" class="btn-secondary btn-sm mt-1 mb-1" name="action" value="remove_admin">Admin törlés</button>
+              {% else %}
+                <button type="submit" class="btn-secondary btn-sm mt-1 mb-1" name="action" value="make_admin">Admin beállítás</button>
+              {% endif %}
+            </form>
+            <form action="{{ url_for('users.delete_user', username=u.username) }}" method="POST">
+              <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal{{ u.username }}">Fiók törlése</button>
+                <div class="modal fade" id="deleteModal{{ u.username }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ u.username }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteModalLabel{{ u.username }}">Biztosan törli a fiókot?</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégse</button>
+                      <form action="{{ url_for('users.delete_user', username=u.username) }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Törlés">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                </div>
+            </form>
+          </td>
+        </tr>
+
+    {% endfor %}
+
+
+    {% for page_num in users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if users.page==page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('users.user_requests', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('users.user_requests', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+
+{% endblock %}
