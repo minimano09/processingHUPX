@@ -1,0 +1,4 @@
+venv/
+script.sh
+test/
+.idea/
